@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ColorGrid</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(9, 40px); gap: 2px; margin: 20px auto; max-width: 400px; }
+        .cell { width: 40px; height: 40px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .cell.selected { background: #a0d0ff; }
+        #selection { margin: 10px; font-size: 18px; }
+        #circleCanvas { margin: 20px auto; display: block; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>ColorGrid</h1>
+    <div class="grid" id="grid"></div>
+    <div id="selection">Выбрано: </div>
+    <canvas id="circleCanvas" width="100" height="100"></canvas>
+    <button id="generateBtn" disabled>Сгенерировать</button>
+    <button id="shareBtn" disabled>Поделиться</button>
+
+    <script>
+        // Инициализация Telegram Web App
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        // Генерация поля 9x9
+        const grid = Array(9).fill().map(() => Array(9).fill().map(() => Math.floor(Math.random() * 9) + 1));
+        const selectedCells = [];
+        const colors = {
+            1: "red", 2: "orange", 3: "yellow", 4: "green",
+            5: "cyan", 6: "blue", 7: "purple", 8: "pink", 9: "black"
+        };
+
+        // Отрисовка сетки
+        const gridDiv = document.getElementById("grid");
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                const cell = document.createElement("div");
+                cell.className = "cell";
+                cell.textContent = grid[i][j];
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                cell.addEventListener("click", toggleCell);
+                gridDiv.appendChild(cell);
+            }
+        }
+
+        // Выбор ячейки
+        function toggleCell(event) {
+            const row = event.target.dataset.row;
+            const col = event.target.dataset.col;
+            const coord = `${row}-${col}`;
+            const index = selectedCells.findIndex(c => c.coord === coord);
+
+            if (index >= 0) {
+                selectedCells.splice(index, 1);
+                event.target.classList.remove("selected");
+            } else if (selectedCells.length < 9) {
+                selectedCells.push({ coord, value: grid[row][col] });
+                event.target.classList.add("selected");
+            }
+
+            updateSelection();
+        }
+
+        // Обновление текста выбранных ячеек
+        function updateSelection() {
+            const selectionDiv = document.getElementById("selection");
+            const generateBtn = document.getElementById("generateBtn");
+            const shareBtn = document.getElementById("shareBtn");
+
+            if (selectedCells.length === 0) {
+                selectionDiv.textContent = "Выбрано: ничего";
+                generateBtn.disabled = true;
+                shareBtn.disabled = true;
+            } else {
+                const coords = selectedCells.map(c => c.coord).join(", ");
+                const values = selectedCells.map(c => c.value).join("-");
+                selectionDiv.textContent = `Выбрано: ${coords} (${values})`;
+                generateBtn.disabled = selectedCells.length < 3;
+                shareBtn.disabled = true;
+            }
+        }
+
+        // Отрисовка круга
+        function drawCircle(combo) {
+            const canvas = document.getElementById("circleCanvas");
+            const ctx = canvas.getContext("2d");
+            const segments = combo.length;
+            const angle = (2 * Math.PI) / segments;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < segments; i++) {
+                ctx.beginPath();
+                ctx.moveTo(50, 50);
+                ctx.arc(50, 50, 50, i * angle, (i + 1) * angle);
+                ctx.fillStyle = colors[combo[i]];
+                ctx.fill();
+            }
+            document.getElementById("shareBtn").disabled = false;
+        }
+
+        // Кнопка "Сгенерировать"
+        document.getElementById("generateBtn").addEventListener("click", () => {
+            const values = selectedCells.map(c => c.value);
+            drawCircle(values);
+        });
+
+        // Кнопка "Поделиться"
+        document.getElementById("shareBtn").addEventListener("click", () => {
+            const coords = selectedCells.map(c => c.coord).join(", ");
+            const values = selectedCells.map(c => c.value).join("-");
+            const text = `Моя комбинация: ${coords} (${values})`;
+            tg.sendData(JSON.stringify({ action: "share", text }));
+        });
+    </script>
+</body>
+</html>
