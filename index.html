@@ -6,25 +6,49 @@
     tg.ready();
     tg.expand();
 
-    // Инициализация TON Connect UI (новая версия)
-    const tonConnectUI = new TONConnectUI({
-        manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
-        buttonRootId: null // Мы управляем кнопкой вручную
-    });
+    // Функция для ожидания загрузки TON Connect UI
+    let tonConnectUI;
+    function initTonConnect() {
+        return new Promise((resolve) => {
+            if (typeof TONConnectUI !== 'undefined') {
+                // Библиотека уже загружена
+                tonConnectUI = new TONConnectUI({
+                    manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
+                    buttonRootId: null
+                });
+                resolve();
+            } else {
+                // Ждём загрузки скрипта
+                const script = document.querySelector('script[src*="tonconnect-ui.min.js"]');
+                script.onload = () => {
+                    tonConnectUI = new TONConnectUI({
+                        manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
+                        buttonRootId: null
+                    });
+                    resolve();
+                };
+            }
+        });
+    }
 
     // Подключение кошелька
     async function connectWallet() {
         try {
+            // Инициализируем TON Connect, если ещё не сделали
+            if (!tonConnectUI) {
+                await initTonConnect();
+            }
+
             // Проверяем, подключён ли кошелёк
             if (tonConnectUI.connected) {
                 document.getElementById('wallet-status').innerText = 'Кошелёк уже подключён!';
                 return;
             }
 
-            // Открываем модальное окно TON Connect
+            // Открываем модальное окно для подключения
             await tonConnectUI.connectWallet();
 
-            // Обновляем статус после подключения
+            // Обновляем статус
             if (tonConnectUI.connected) {
                 document.getElementById('wallet-status').innerText = 'Кошелёк подключён!';
                 tg.showAlert('Кошелёк успешно подключён!');
@@ -37,6 +61,10 @@
 
     // Функция покупки
     async function buyNFT(nftName, price) {
+        if (!tonConnectUI) {
+            await initTonConnect();
+        }
+
         if (!tonConnectUI.connected) {
             tg.showAlert('Сначала подключи кошелёк!');
             return;
