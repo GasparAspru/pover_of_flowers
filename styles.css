@@ -1,1 +1,177 @@
+:root {
+    --primary: #6B48FF;
+    --secondary: #00DDEB;
+    --accent: #FF6B6B;
+    --text: #2D3436;
+    --background: #F8F9FA;
+}
 
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', Arial, sans-serif;
+    background: linear-gradient(135deg, var(--background) 0%, #E9ECEF 100%);
+    min-height: 100vh;
+    padding: 2rem;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+h1 {
+    text-align: center;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.wallet {
+    max-width: 400px;
+    margin: 0 auto 2.5rem;
+    text-align: center;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.wallet button {
+    background: linear-gradient(45deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.wallet button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(107, 72, 255, 0.3);
+}
+
+.wallet button:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.wallet p {
+    margin-top: 1rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+.catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.nft-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.nft-card:nth-child(2) { animation-delay: 0.1s; }
+.nft-card:nth-child(3) { animation-delay: 0.2s; }
+.nft-card:nth-child(4) { animation-delay: 0.3s; }
+
+.nft-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.nft-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.nft-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+}
+
+.nft-card h3 {
+    font-size: clamp(1rem, 2.5vw, 1.2rem);
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-weight: 600;
+}
+
+.nft-card p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+}
+
+.nft-card button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.7rem;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.nft-card button:hover {
+    background: #FF8787;
+    transform: translateY(-2px);
+}
+
+.nft-card button:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #A78BFA;
+        --secondary: #5EEAD4;
+        --accent: #FCA5A5;
+        --text: #E5E7EB;
+        --background: #1F2937;
+    }
+    body {
+        background: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+    }
+    .nft-card, .wallet {
+        background: #2D3748;
+    }
+}
+
+@media (max-width: 768px) {
+    body { padding: 1rem; }
+    .catalog { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+}
