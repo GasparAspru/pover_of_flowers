@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flower NFT Shop</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --primary: #6B48FF;
@@ -32,7 +34,7 @@
             text-align: center;
             color: var(--primary);
             margin-bottom: 2rem;
-            font-size: 2.5rem;
+            font-size: clamp(2rem, 5vw, 3rem);
             font-weight: 700;
             text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -45,6 +47,7 @@
             padding: 1.5rem;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s ease-out forwards;
         }
 
         .wallet button {
@@ -61,6 +64,11 @@
         .wallet button:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(107, 72, 255, 0.3);
+        }
+
+        .wallet button:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
         }
 
         .wallet p {
@@ -85,7 +93,12 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            animation: fadeIn 0.5s ease-out forwards;
         }
+
+        .nft-card:nth-child(2) { animation-delay: 0.1s; }
+        .nft-card:nth-child(3) { animation-delay: 0.2s; }
+        .nft-card:nth-child(4) { animation-delay: 0.3s; }
 
         .nft-card:hover {
             transform: translateY(-10px);
@@ -111,7 +124,7 @@
         }
 
         .nft-card h3 {
-            font-size: 1.2rem;
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
             margin-bottom: 0.5rem;
             color: var(--text);
             font-weight: 600;
@@ -121,6 +134,7 @@
             font-size: 0.9rem;
             color: #666;
             margin-bottom: 1rem;
+            line-height: 1.4;
         }
 
         .nft-card button {
@@ -140,55 +154,177 @@
             transform: translateY(-2px);
         }
 
-        @media (max-width: 768px) {
+        .nft-card button:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #A78BFA;
+                --secondary: #5EEAD4;
+                --accent: #FCA5A5;
+                --text: #E5E7EB;
+                --background: #1F2937;
+            }
             body {
-                padding: 1rem;
+                background: linear-gradient(135deg, #1F2937 0%, #374151 100%);
             }
-            .catalog {
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            .nft-card, .wallet {
+                background: #2D3748;
             }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .catalog { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
         }
     </style>
 </head>
 <body>
-    <h1>Магазин NFT-цветов</h1>
+    <h1 id="shop-title">Магазин NFT-цветов</h1>
     <div class="wallet">
-        <button onclick="connectWallet()">Подключить кошелёк TON</button>
+        <button onclick="connectWallet()" aria-label="Подключить кошелёк TON">
+            <i class="fas fa-wallet"></i> <span id="connect-text">Подключить кошелёк TON</span>
+        </button>
         <p id="wallet-status">Кошелёк не подключён</p>
     </div>
-    <div class="catalog">
-        <div class="nft-card">
-            <img src="https://via.placeholder.com/200x150?text=Rose#1" alt="Rose #1">
-            <h3>Роза #1</h3>
-            <p>Цена: 5 TON<br>Редкость: 10%</p>
-            <button onclick="buyNFT('Rose#1', 5)">Купить</button>
-        </div>
-        <div class="nft-card">
-            <img src="https://via.placeholder.com/200x150?text=Tulip#2" alt="Tulip #2">
-            <h3>Тюльпан #2</h3>
-            <p>Цена: 10 TON<br>Редкость: 5%</p>
-            <button onclick="buyNFT('Tulip#2', 10)">Купить</button>
-        </div>
-        <div class="nft-card">
-            <img src="https://via.placeholder.com/200x150?text=Lily#3" alt="Lily #3">
-            <h3>Лилия #3</h3>
-            <p>Цена: 8 TON<br>Редкость: 7%</p>
-            <button onclick="buyNFT('Lily#3', 8)">Купить</button>
-        </div>
-        <div class="nft-card">
-            <img src="https://via.placeholder.com/200x150?text=Orchid#4" alt="Orchid #4">
-            <h3>Орхидея #4</h3>
-            <p>Цена: 15 TON<br>Редкость: 3%</p>
-            <button onclick="buyNFT('Orchid#4', 15)">Купить</button>
-        </div>
-    </div>
+    <div class="catalog"></div>
 
-    <!-- Скрипты остаются без изменений -->
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js" defer></script>
     <script>
-        // Ваш существующий JavaScript код здесь
-        // Я не стал его менять, так как он отвечает за функциональность
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+
+        const translations = {
+            ru: {
+                title: "Магазин NFT-цветов",
+                connect: "Подключить кошелёк TON",
+                notConnected: "Кошелёк не подключён",
+                connected: "Кошелёк подключён!",
+                connecting: "Подключение...",
+                error: "Ошибка подключения"
+            },
+            en: {
+                title: "Flower NFT Shop",
+                connect: "Connect TON Wallet",
+                notConnected: "Wallet not connected",
+                connected: "Wallet connected!",
+                connecting: "Connecting...",
+                error: "Connection error"
+            }
+        };
+
+        let currentLang = "ru";
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.getElementById("shop-title").textContent = translations[lang].title;
+            document.getElementById("connect-text").textContent = translations[lang].connect;
+            document.getElementById("wallet-status").textContent = translations[lang].notConnected;
+        }
+        setLanguage(currentLang);
+
+        const nfts = [
+            { name: "Роза #1", price: 5, rarity: "10%", img: "https://via.placeholder.com/200x150?text=Rose#1" },
+            { name: "Тюльпан #2", price: 10, rarity: "5%", img: "https://via.placeholder.com/200x150?text=Tulip#2" },
+            { name: "Лилия #3", price: 8, rarity: "7%", img: "https://via.placeholder.com/200x150?text=Lily#3" },
+            { name: "Орхидея #4", price: 15, rarity: "3%", img: "https://via.placeholder.com/200x150?text=Orchid#4" }
+        ];
+
+        const catalog = document.querySelector('.catalog');
+        function renderNFT({ name, price, rarity, img }) {
+            const card = document.createElement('div');
+            card.className = 'nft-card';
+            card.setAttribute('role', 'article');
+            card.innerHTML = `
+                <img src="${img}" alt="${name}" loading="lazy">
+                <h3>${name}</h3>
+                <p>Цена: ${price} TON<br>Редкость: ${rarity}</p>
+                <button onclick="buyNFT('${name}', ${price})" aria-label="Купить ${name}">Купить</button>
+            `;
+            catalog.appendChild(card);
+        }
+        nfts.forEach(renderNFT);
+
+        let tonConnectUI;
+        function initTonConnect() {
+            return new Promise((resolve) => {
+                if (typeof TONConnectUI !== 'undefined') {
+                    tonConnectUI = new TONConnectUI({
+                        manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
+                        buttonRootId: null
+                    });
+                    resolve();
+                } else {
+                    const script = document.querySelector('script[src*="tonconnect-ui.min.js"]');
+                    script.onload = () => {
+                        tonConnectUI = new TONConnectUI({
+                            manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
+                            buttonRootId: null
+                        });
+                        resolve();
+                    };
+                }
+            });
+        }
+
+        async function connectWallet() {
+            const status = document.getElementById('wallet-status');
+            status.textContent = translations[currentLang].connecting;
+            try {
+                if (!tonConnectUI) await initTonConnect();
+                if (tonConnectUI.connected) {
+                    status.textContent = translations[currentLang].connected;
+                    return;
+                }
+                await tonConnectUI.connectWallet();
+                status.textContent = translations[currentLang].connected;
+                tg.showAlert(translations[currentLang].connected);
+            } catch (error) {
+                status.textContent = translations[currentLang].error;
+                tg.showAlert('Ошибка: ' + error.message);
+                console.error(error);
+            }
+        }
+
+        async function buyNFT(nftName, price) {
+            if (!tonConnectUI) await initTonConnect();
+            if (!tonConnectUI.connected) {
+                tg.showAlert('Сначала подключи кошелёк!');
+                return;
+            }
+            if (price <= 0 || !Number.isInteger(price)) {
+                tg.showAlert('Некорректная цена!');
+                return;
+            }
+
+            tg.showConfirm(`Купить ${nftName} за ${price} TON?`, async (confirmed) => {
+                if (confirmed) {
+                    const transaction = {
+                        validUntil: Math.floor(Date.now() / 1000) + 300,
+                        messages: [{
+                            address: 'UQCzP2HK6nkvDPQV1QbkqP9vzhxHB6WGKutKyIKxTKKq5VMt',
+                            amount: (price * 1e9).toString(),
+                            payload: btoa(`Buy ${nftName}`)
+                        }]
+                    };
+                    try {
+                        await tonConnectUI.sendTransaction(transaction);
+                        tg.showAlert(`Вы купили ${nftName}!`);
+                        tg.close();
+                    } catch (e) {
+                        tg.showAlert('Ошибка оплаты: ' + e.message);
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
