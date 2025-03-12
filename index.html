@@ -199,10 +199,12 @@
     <script src="https://telegram.org/js/telegram-web-app.js" defer></script>
     <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js" defer></script>
     <script>
+        // Инициализация Telegram WebApp
         const tg = window.Telegram.WebApp;
         tg.ready();
         tg.expand();
 
+        // Локализация
         const translations = {
             ru: {
                 title: "Магазин NFT-цветов",
@@ -231,6 +233,7 @@
         }
         setLanguage(currentLang);
 
+        // Данные NFT
         const nfts = [
             { name: "Роза #1", price: 5, rarity: "10%", img: "https://via.placeholder.com/200x150?text=Rose#1" },
             { name: "Тюльпан #2", price: 10, rarity: "5%", img: "https://via.placeholder.com/200x150?text=Tulip#2" },
@@ -253,47 +256,76 @@
         }
         nfts.forEach(renderNFT);
 
-        let tonConnectUI;
-        function initTonConnect() {
-            return new Promise((resolve) => {
-                if (typeof TONConnectUI !== 'undefined') {
-                    tonConnectUI = new TONConnectUI({
-                        manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
-                        buttonRootId: null
-                    });
-                    resolve();
-                } else {
+        // Переменная для TON Connect UI
+        let tonConnectUI = null;
+
+        // Инициализация TON Connect
+        async function initTonConnect() {
+            return new Promise((resolve, reject) => {
+                console.log("Проверка загрузки TONConnectUI...");
+                if (typeof window.TONConnectUI === 'undefined') {
+                    console.log("TONConnectUI ещё не загружен, ждём...");
                     const script = document.querySelector('script[src*="tonconnect-ui.min.js"]');
-                    script.onload = () => {
-                        tonConnectUI = new TONConnectUI({
+                    script.addEventListener('load', () => {
+                        console.log("TONConnectUI загружен!");
+                        tonConnectUI = new window.TONConnectUI({
                             manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
                             buttonRootId: null
                         });
-                        resolve();
-                    };
+                        resolve(tonConnectUI);
+                    });
+                    script.addEventListener('error', () => reject(new Error("Ошибка загрузки TON Connect UI")));
+                } else {
+                    console.log("TONConnectUI уже доступен.");
+                    tonConnectUI = new window.TONConnectUI({
+                        manifestUrl: 'https://tonconnect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json',
+                        buttonRootId: null
+                    });
+                    resolve(tonConnectUI);
                 }
             });
         }
 
+        // Функция подключения кошелька
         async function connectWallet() {
             const status = document.getElementById('wallet-status');
             status.textContent = translations[currentLang].connecting;
+
             try {
-                if (!tonConnectUI) await initTonConnect();
+                // Проверяем, инициализирован ли tonConnectUI
+                if (!tonConnectUI) {
+                    console.log("Инициализация TON Connect...");
+                    await initTonConnect();
+                }
+
+                // Проверяем текущее состояние подключения
                 if (tonConnectUI.connected) {
+                    console.log("Кошелёк уже подключён.");
                     status.textContent = translations[currentLang].connected;
+                    tg.showAlert(translations[currentLang].connected);
                     return;
                 }
+
+                // Попытка подключения кошелька
+                console.log("Открытие модального окна для подключения...");
                 await tonConnectUI.connectWallet();
-                status.textContent = translations[currentLang].connected;
-                tg.showAlert(translations[currentLang].connected);
+                
+                // Проверяем успешность подключения
+                if (tonConnectUI.connected) {
+                    console.log("Кошелёк успешно подключён!");
+                    status.textContent = translations[currentLang].connected;
+                    tg.showAlert(translations[currentLang].connected);
+                } else {
+                    throw new Error("Подключение не удалось.");
+                }
             } catch (error) {
+                console.error("Ошибка подключения:", error);
                 status.textContent = translations[currentLang].error;
-                tg.showAlert('Ошибка: ' + error.message);
-                console.error(error);
+                tg.showAlert(`Ошибка: ${error.message}`);
             }
         }
 
+        // Функция покупки NFT (без изменений)
         async function buyNFT(nftName, price) {
             if (!tonConnectUI) await initTonConnect();
             if (!tonConnectUI.connected) {
@@ -325,6 +357,15 @@
                 }
             });
         }
+
+        // Проверка готовности скриптов
+        window.addEventListener('load', () => {
+            console.log("Страница полностью загружена.");
+            if (!window.TONConnectUI) {
+                console.error("TONConnectUI не загружен!");
+                document.getElementById('wallet-status').textContent = "Ошибка загрузки TON Connect";
+            }
+        });
     </script>
 </body>
 </html>
