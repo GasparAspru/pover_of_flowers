@@ -1,26 +1,22 @@
-
-// Инициализация Telegram WebApp
-const tg = window.Telegram.WebApp;
-tg.ready();
-tg.expand();
+// Проверка Telegram WebApp
+if (!window.Telegram || !window.Telegram.WebApp) {
+    console.error("Telegram WebApp не инициализирован. Запустите в Telegram!");
+} else {
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand();
+    console.log("Telegram WebApp инициализирован.");
+}
 
 // Локализация
 const translations = {
     ru: {
         title: "Магазин NFT-цветов",
-        connect: "Подключить кошелёк TON",
+        connect: "Подключить кошелёк",
         notConnected: "Кошелёк не подключён",
         connected: "Кошелёк подключён!",
         connecting: "Подключение...",
         error: "Ошибка подключения"
-    },
-    en: {
-        title: "Flower NFT Shop",
-        connect: "Connect TON Wallet",
-        notConnected: "Wallet not connected",
-        connected: "Wallet connected!",
-        connecting: "Connecting...",
-        error: "Connection error"
     }
 };
 
@@ -41,17 +37,15 @@ const nfts = [
     { name: "Орхидея #4", price: 15, rarity: "3%", img: "https://via.placeholder.com/200x150?text=Orchid#4" }
 ];
 
-// Рендеринг NFT
 const catalog = document.querySelector('.catalog');
 function renderNFT({ name, price, rarity, img }) {
     const card = document.createElement('div');
     card.className = 'nft-card';
-    card.setAttribute('role', 'article');
     card.innerHTML = `
         <img src="${img}" alt="${name}" loading="lazy">
         <h3>${name}</h3>
         <p>Цена: ${price} TON<br>Редкость: ${rarity}</p>
-        <button onclick="buyNFT('${name}', ${price})" aria-label="Купить ${name}">Купить</button>
+        <button onclick="buyNFT('${name}', ${price})">Купить</button>
     `;
     catalog.appendChild(card);
 }
@@ -62,34 +56,57 @@ let tonConnectUI = null;
 
 async function initTonConnect() {
     return new Promise((resolve, reject) => {
-        console.log("Инициализация TON Connect...");
+        console.log("Проверка TONConnectUI...");
         if (typeof window.TONConnectUI === 'undefined') {
-            console.log("TONConnectUI ещё не загружен, ждём...");
+            console.log("TONConnectUI не загружен, ждём...");
             const script = document.querySelector('script[src*="tonconnect-ui.min.js"]');
             script.addEventListener('load', () => {
-                console.log("TONConnectUI загружен.");
+                console.log("TONConnectUI загружен!");
                 tonConnectUI = new window.TONConnectUI({
-                    manifestUrl: '/manifest.json', // Локальный манифест
-                    buttonRootId: null
+                    manifestUrl: `${window.location.origin}/manifest.json`,
+                    walletsListConfiguration: {
+                        includeWallets: [
+                            {
+                                appName: "bitgetWallet",
+                                name: "Bitget Wallet",
+                                image: "https://web3.bitget.com/images/wallet/bitget-wallet.png",
+                                aboutUrl: "https://web3.bitget.com/",
+                                universalLink: "https://t.me/BitgetWallet_TGBot",
+                                bridgeUrl: "https://tonconnect.bitget.com/bridge",
+                                platforms: ["ios", "android", "web"]
+                            }
+                        ]
+                    }
                 });
                 resolve(tonConnectUI);
             });
             script.addEventListener('error', () => {
-                console.error("Ошибка загрузки TON Connect UI");
+                console.error("Ошибка загрузки TON Connect UI!");
                 reject(new Error("Не удалось загрузить TON Connect UI"));
             });
         } else {
             console.log("TONConnectUI уже доступен.");
             tonConnectUI = new window.TONConnectUI({
-                manifestUrl: '/manifest.json', // Локальный манифест
-                buttonRootId: null
+                manifestUrl: `${window.location.origin}/manifest.json`,
+                walletsListConfiguration: {
+                    includeWallets: [
+                        {
+                            appName: "bitgetWallet",
+                            name: "Bitget Wallet",
+                            image: "https://web3.bitget.com/images/wallet/bitget-wallet.png",
+                            aboutUrl: "https://web3.bitget.com/",
+                            universalLink: "https://t.me/BitgetWallet_TGBot",
+                            bridgeUrl: "https://tonconnect.bitget.com/bridge",
+                            platforms: ["ios", "android", "web"]
+                        }
+                    ]
+                }
             });
             resolve(tonConnectUI);
         }
     });
 }
 
-// Подключение кошелька
 async function connectWallet() {
     const status = document.getElementById('wallet-status');
     status.textContent = translations[currentLang].connecting;
@@ -124,7 +141,6 @@ async function connectWallet() {
     }
 }
 
-// Покупка NFT
 async function buyNFT(nftName, price) {
     if (!tonConnectUI) await initTonConnect();
     if (!tonConnectUI.connected) {
@@ -157,7 +173,6 @@ async function buyNFT(nftName, price) {
     });
 }
 
-// Проверка загрузки
 window.addEventListener('load', () => {
     console.log("Страница загружена.");
     if (!window.TONConnectUI) {
