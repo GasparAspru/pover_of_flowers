@@ -34,11 +34,17 @@ function toggleDropdown() {
     dropdownContent.classList.toggle("show");
 }
 
-// Эффект матрицы по всей вертикали
+// Эффект матрицы по всей странице
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+
+// Устанавливаем размер канваса на всю страницу
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas); // Обновляем при изменении размера окна
 
 const katakana = "アカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトノホモヨロヲゴゾドボポ";
 const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -47,13 +53,13 @@ const alphabet = katakana + latin + nums;
 
 const fontSize = 16;
 const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(0); // Начальная позиция в 0
+const drops = Array(Math.floor(columns)).map(() => Math.random() * (canvas.height / fontSize)); // Случайные начальные позиции
 
 function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; // Постепенное затухание
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#ff007a"; // Неоновый розовый
+    ctx.fillStyle = "#ff007a";
     ctx.font = `${fontSize}px monospace`;
 
     drops.forEach((y, i) => {
@@ -61,11 +67,11 @@ function drawMatrix() {
         const x = i * fontSize;
         ctx.fillText(text, x, y * fontSize);
 
-        // Случайный сброс позиции для имитации непрерывного потока
-        if (y * fontSize > canvas.height || Math.random() > 0.95) {
-            drops[i] = Math.random() * (canvas.height / fontSize); // Случайная позиция по всей высоте
+        // Обновление позиции с возвратом в случайную точку при выходе за пределы
+        if (y * fontSize > canvas.height || Math.random() > 0.97) {
+            drops[i] = Math.random() * (canvas.height / fontSize); // Случайная точка по всей высоте
         }
-        drops[i]++; // Скорость падения
+        drops[i] += 0.5; // Медленное падение для равномерности
     });
 }
 
@@ -76,6 +82,6 @@ displayFlowers();
 
 // Настройка кнопки "Назад"
 Telegram.WebApp.BackButton.onClick(() => {
-    Telegram.WebApp.close();
+    Telegram.WebApp.close());
 });
 Telegram.WebApp.BackButton.show();
