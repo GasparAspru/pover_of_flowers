@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sakura Gifts</title>
+    <title>Сакура Подарки</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,7 +12,7 @@
             color: #333;
             text-align: center;
             padding: 20px;
-            overflow: hidden; /* Для анимации лепестков */
+            overflow: hidden;
         }
         h1 {
             color: #ff69b4;
@@ -56,13 +56,13 @@
             height: 40px;
             margin-right: 10px;
         }
-        /* Анимация лепестков */
         .petal {
             position: absolute;
-            width: 15px;
-            height: 15px;
-            background: url('petal.png') no-repeat center;
-            background-size: contain;
+            width: 10px;
+            height: 20px;
+            background-color: #ff69b4;
+            border-radius: 50% 50% 0 0;
+            box-shadow: 0 0 5px rgba(255, 105, 180, 0.7);
             pointer-events: none;
             animation: fall linear infinite;
         }
