@@ -7,7 +7,7 @@ const flowers = Array.from({ length: 99 }, (_, i) => ({
     id: `sakura_${i + 1}`,
     icon: `flowers/sakura-${i + 1}.png`,
     description: `Это уникальная Сакура ${i + 1} из коллекции Wild Sakura.`,
-    link: `https://wildsakura.example.com/flower-${i + 1}` // Пример ссылки
+    link: `https://wildsakura.example.com/flower-${i + 1}` // Ссылка скрыта визуально
 }));
 
 // Отображение списка цветков
@@ -25,7 +25,7 @@ function displayFlowers() {
         flowerDiv.onclick = () => {
             Telegram.WebApp.showPopup({
                 title: flower.name,
-                message: `${flower.description}\n\nПодробнее: ${flower.link}`,
+                message: flower.description, // Только описание, без ссылки
                 buttons: [
                     { id: "open", type: "default", text: "Открыть ссылку" },
                     { type: "cancel", text: "Закрыть" }
