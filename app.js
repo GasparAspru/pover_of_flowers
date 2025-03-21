@@ -5,7 +5,7 @@ window.Telegram.WebApp.ready();
 const flowers = Array.from({ length: 99 }, (_, i) => ({
     name: `Сакура ${i + 1}`,
     id: `sakura_${i + 1}`,
-    icon: `flowers/sakura-${i + 1}.png` // Путь к изображениям
+    icon: `flowers/sakura-${i + 1}.png`
 }));
 
 // Отображение списка цветков
@@ -34,7 +34,7 @@ function toggleDropdown() {
     dropdownContent.classList.toggle("show");
 }
 
-// Эффект матрицы
+// Эффект матрицы по всей вертикали
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -47,10 +47,10 @@ const alphabet = katakana + latin + nums;
 
 const fontSize = 16;
 const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
+const drops = Array(Math.floor(columns)).fill(0); // Начальная позиция в 0
 
 function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; // Постепенное затухание
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "#ff007a"; // Неоновый розовый
@@ -61,10 +61,11 @@ function drawMatrix() {
         const x = i * fontSize;
         ctx.fillText(text, x, y * fontSize);
 
-        if (y * fontSize > canvas.height && Math.random() > 0.975) {
-            drops[i] = 0;
+        // Случайный сброс позиции для имитации непрерывного потока
+        if (y * fontSize > canvas.height || Math.random() > 0.95) {
+            drops[i] = Math.random() * (canvas.height / fontSize); // Случайная позиция по всей высоте
         }
-        drops[i]++;
+        drops[i]++; // Скорость падения
     });
 }
 
