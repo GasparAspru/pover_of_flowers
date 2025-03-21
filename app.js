@@ -1,10 +1,10 @@
- // Список подарков с иконками (заменить URL на реальные изображения)
+// Список подарков с локальными статичными иконками
 const gifts = [
-    { name: "Цветок Сакуры", description: "Редкий подарок (100K шт)", cost: 25, id: "sakura_flower", rarity: "rare", icon: "sakura-flower.png" },
-    { name: "Сердце с лепестками", description: "Романтичный подарок", cost: 15, id: "sakura_heart", rarity: "common", icon: "sakura-heart.png" },
-    { name: "Торт Сакура", description: "Лимитированный торт (500K шт)", cost: 500, id: "sakura_cake", rarity: "limited", icon: "sakura-cake.png" },
-    { name: "Плюшевый Пепе", description: "Коллекционный подарок", cost: 100, id: "plush_pepe", rarity: "rare", icon: "plush-pepe.png" },
-    { name: "Леденец", description: "Редкий подарок (500K шт)", cost: 15, id: "lollipop", rarity: "common", icon: "lollipop.png" }
+    { name: "Цветок Сакуры", description: "Редкий подарок (100K шт)", cost: 25, id: "sakura_flower", rarity: "rare", icon: "icons/sakura-flower.png" },
+    { name: "Сердце с лепестками", description: "Романтичный подарок", cost: 15, id: "sakura_heart", rarity: "common", icon: "icons/sakura-heart.png" },
+    { name: "Торт Сакура", description: "Лимитированный торт (500K шт)", cost: 500, id: "sakura_cake", rarity: "limited", icon: "icons/sakura-cake.png" },
+    { name: "Плюшевый Пепе", description: "Коллекционный подарок", cost: 100, id: "plush_pepe", rarity: "rare", icon: "icons/plush-pepe.png" },
+    { name: "Леденец", description: "Редкий подарок (500K шт)", cost: 15, id: "lollipop", rarity: "common", icon: "icons/lollipop.png" }
 ];
 
 // Инициализация Telegram Web App
@@ -13,7 +13,7 @@ window.Telegram.WebApp.ready();
 // Отображение подарков
 function displayGifts(giftArray) {
     const giftList = document.getElementById("giftList");
-    giftList.innerHTML = ""; // Очищаем список
+    giftList.innerHTML = "";
 
     giftArray.forEach(gift => {
         const giftDiv = document.createElement("div");
@@ -38,7 +38,7 @@ function displayGifts(giftArray) {
     });
 }
 
-// Перевод редкости на русский
+// Перевод редкости
 function translateRarity(rarity) {
     switch (rarity) {
         case "common": return "Обычный";
@@ -48,11 +48,10 @@ function translateRarity(rarity) {
     }
 }
 
-// Применение фильтров и сортировки
+// Применение фильтров
 function applyFilters() {
     let filteredGifts = [...gifts];
 
-    // Фильтр по поиску
     const searchInput = document.getElementById("searchInput").value.toLowerCase();
     if (searchInput) {
         filteredGifts = filteredGifts.filter(gift =>
@@ -61,13 +60,11 @@ function applyFilters() {
         );
     }
 
-    // Фильтр по редкости
     const rarityFilter = document.getElementById("rarityFilter").value;
     if (rarityFilter) {
         filteredGifts = filteredGifts.filter(gift => gift.rarity === rarityFilter);
     }
 
-    // Сортировка по цене
     const priceFilter = document.getElementById("priceFilter").value;
     if (priceFilter === "low-to-high") {
         filteredGifts.sort((a, b) => a.cost - b.cost);
@@ -87,15 +84,13 @@ function buyStars() {
 function createPetal() {
     const petal = document.createElement("div");
     petal.className = "petal";
-    petal.style.left = Math.random() * 100 + "vw"; // Случайная позиция по горизонтали
-    petal.style.animationDuration = Math.random() * 3 + 2 + "s"; // Случайная скорость падения (2-5 сек)
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.animationDuration = Math.random() * 3 + 2 + "s";
+    petal.style.transform = `rotate(${Math.random() * 360}deg)`;
     document.body.appendChild(petal);
-
-    // Удаление лепестка после завершения анимации
     setTimeout(() => petal.remove(), 5000);
 }
 
-// Создаем лепестки каждые 500 мс
 setInterval(createPetal, 500);
 
 // Показать все подарки при запуске
