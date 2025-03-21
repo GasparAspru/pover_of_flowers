@@ -1,47 +1,71 @@
-// Инициализация Telegram Web App
-window.Telegram.WebApp.ready();
-Telegram.WebApp.expand();
+// Ждем полной загрузки DOM перед выполнением кода
+document.addEventListener("DOMContentLoaded", function () {
+    // Инициализация Telegram Web App
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+    } else {
+        console.warn("Telegram Web App API не доступен");
+    }
 
-// Список из 99 цветков
-const flowers = Array.from({ length: 99 }, (_, i) => ({
-    name: `Сакура ${i + 1}`,
-    id: `sakura_${i + 1}`,
-    icon: `flowers/sakura-${i + 1}.png`
-}));
+    // Список из 99 цветков
+    const flowers = Array.from({ length: 99 }, (_, i) => ({
+        name: `Сакура ${i + 1}`,
+        id: `sakura_${i + 1}`,
+        icon: `flowers/sakura-${i + 1}.png`
+    }));
 
-// Отображение списка цветков
-function displayFlowers() {
-    const flowerList = document.getElementById("flowerList");
-    flowerList.innerHTML = "";
+    // Отображение списка цветков
+    function displayFlowers() {
+        const flowerList = document.getElementById("flowerList");
+        if (!flowerList) {
+            console.error("Элемент flowerList не найден!");
+            return;
+        }
+        flowerList.innerHTML = "";
 
-    flowers.forEach(flower => {
-        const flowerDiv = document.createElement("div");
-        flowerDiv.className = "flower-item";
-        flowerDiv.innerHTML = `
-            <img src="${flower.icon}" class="flower-icon" alt="${flower.name}">
-            <span>${flower.name}</span>
-        `;
-        flowerDiv.onclick = () => {
-            Telegram.WebApp.showAlert(`Вы выбрали: ${flower.name}`);
-            toggleDropdown();
-        };
-        flowerList.appendChild(flowerDiv);
-    });
-}
+        flowers.forEach(flower => {
+            const flowerDiv = document.createElement("div");
+            flowerDiv.className = "flower-item";
+            flowerDiv.innerHTML = `
+                <img src="${flower.icon}" class="flower-icon" alt="${flower.name}" onerror="this.src='https://via.placeholder.com/30';">
+                <span>${flower.name}</span>
+            `;
+            flowerDiv.onclick = () => {
+                if (window.Telegram && window.Telegram.WebApp) {
+                    window.Telegram.WebApp.showAlert(`Вы выбрали: ${flower.name}`);
+                } else {
+                    alert(`Вы выбрали: ${flower.name}`);
+                }
+                toggleDropdown();
+            };
+            flowerList.appendChild(flowerDiv);
+        });
+    }
 
-// Переключение видимости выпадающего меню
-function toggleDropdown() {
-    const dropdownContent = document.getElementById("flowerList");
-    dropdownContent.classList.toggle("show");
-}
+    // Переключение видимости выпадающего меню
+    function toggleDropdown() {
+        const dropdownContent = document.getElementById("flowerList");
+        if (dropdownContent) {
+            dropdownContent.classList.toggle("show");
+        } else {
+            console.error("dropdownContent не найден!");
+        }
+    }
 
-// Эффект матрицы
-const canvas = document.getElementById("matrix");
-const ctx = canvas.getContext("2d");
+    // Эффект матрицы
+    const canvas = document.getElementById("matrix");
+    if (!canvas) {
+        console.error("Канвас с id 'matrix' не найден!");
+        return;
+    }
 
-if (!canvas || !ctx) {
-    console.error("Канвас или контекст не найдены!");
-} else {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+        console.error("Не удалось получить контекст канваса!");
+        return;
+    }
+
     // Установка размера канваса
     function resizeCanvas() {
         canvas.width = window.innerWidth;
@@ -82,13 +106,15 @@ if (!canvas || !ctx) {
 
     // Запуск анимации
     drawMatrix();
-}
 
-// Инициализация списка цветков
-displayFlowers();
+    // Инициализация списка цветков
+    displayFlowers();
 
-// Настройка кнопки "Назад"
-Telegram.WebApp.BackButton.onClick(() => {
-    Telegram.WebApp.close();
+    // Настройка кнопки "Назад"
+    if (window.Telegram && window.Telegram.WebApp) {
+        window.Telegram.WebApp.BackButton.onClick(() => {
+            window.Telegram.WebApp.close();
+        });
+        window.Telegram.WebApp.BackButton.show();
+    }
 });
-Telegram.WebApp.BackButton.show();
