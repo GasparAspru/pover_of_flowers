@@ -1,5 +1,6 @@
 // Инициализация Telegram Web App
 window.Telegram.WebApp.ready();
+Telegram.WebApp.expand(); // Растягиваем приложение на весь экран
 
 // Список из 99 цветков
 const flowers = Array.from({ length: 99 }, (_, i) => ({
@@ -38,13 +39,13 @@ function toggleDropdown() {
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 
-// Устанавливаем размер канваса на всю страницу
+// Установка размера канваса
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 resizeCanvas();
-window.addEventListener('resize', resizeCanvas); // Обновляем при изменении размера окна
+window.addEventListener("resize", resizeCanvas);
 
 const katakana = "アカサタナハマヤラワガザダバパイキシチニヒミリヰギジヂビピウクスツヌフムユルグズヅブプエケセテネヘメレヱゲゼデベペオコソトノホモヨロヲゴゾドボポ";
 const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -52,8 +53,8 @@ const nums = "0123456789";
 const alphabet = katakana + latin + nums;
 
 const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).map(() => Math.random() * (canvas.height / fontSize)); // Случайные начальные позиции
+const columns = Math.floor(canvas.width / fontSize);
+const drops = Array(columns).map(() => Math.random() * (canvas.height / fontSize));
 
 function drawMatrix() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -67,21 +68,23 @@ function drawMatrix() {
         const x = i * fontSize;
         ctx.fillText(text, x, y * fontSize);
 
-        // Обновление позиции с возвратом в случайную точку при выходе за пределы
         if (y * fontSize > canvas.height || Math.random() > 0.97) {
-            drops[i] = Math.random() * (canvas.height / fontSize); // Случайная точка по всей высоте
+            drops[i] = Math.random() * (canvas.height / fontSize);
         }
-        drops[i] += 0.5; // Медленное падение для равномерности
+        drops[i] += 0.5;
     });
+
+    requestAnimationFrame(drawMatrix); // Плавная анимация
 }
 
-setInterval(drawMatrix, 50);
+// Запуск анимации
+drawMatrix();
 
 // Инициализация списка цветков
 displayFlowers();
 
 // Настройка кнопки "Назад"
 Telegram.WebApp.BackButton.onClick(() => {
-    Telegram.WebApp.close());
+    Telegram.WebApp.close();
 });
 Telegram.WebApp.BackButton.show();
