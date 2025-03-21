@@ -1,11 +1,13 @@
 // Инициализация Telegram Web App
 window.Telegram.WebApp.ready();
 
-// Список из 99 цветков
+// Список из 99 цветков с описанием и ссылкой
 const flowers = Array.from({ length: 99 }, (_, i) => ({
     name: `Сакура ${i + 1}`,
     id: `sakura_${i + 1}`,
-    icon: `flowers/sakura-${i + 1}.png`
+    icon: `flowers/sakura-${i + 1}.png`,
+    description: `Это уникальная Сакура ${i + 1} из коллекции Wild Sakura.`,
+    link: `https://wildsakura.example.com/flower-${i + 1}` // Пример ссылки
 }));
 
 // Отображение списка цветков
@@ -21,8 +23,19 @@ function displayFlowers() {
             <span>${flower.name}</span>
         `;
         flowerDiv.onclick = () => {
-            Telegram.WebApp.showAlert(`Вы выбрали: ${flower.name}`);
-            toggleDropdown();
+            Telegram.WebApp.showPopup({
+                title: flower.name,
+                message: `${flower.description}\n\nПодробнее: ${flower.link}`,
+                buttons: [
+                    { id: "open", type: "default", text: "Открыть ссылку" },
+                    { type: "cancel", text: "Закрыть" }
+                ]
+            }, (buttonId) => {
+                if (buttonId === "open") {
+                    Telegram.WebApp.openLink(flower.link);
+                }
+                toggleDropdown();
+            });
         };
         flowerList.appendChild(flowerDiv);
     });
@@ -47,13 +60,13 @@ const alphabet = katakana + latin + nums;
 
 const fontSize = 16;
 const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(0); // Начальная позиция в 0
+const drops = Array(Math.floor(columns)).fill(0);
 
 function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)"; // Постепенное затухание
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    ctx.fillStyle = "#ff007a"; // Неоновый розовый
+    ctx.fillStyle = "#ff007a";
     ctx.font = `${fontSize}px monospace`;
 
     drops.forEach((y, i) => {
@@ -61,11 +74,10 @@ function drawMatrix() {
         const x = i * fontSize;
         ctx.fillText(text, x, y * fontSize);
 
-        // Случайный сброс позиции для имитации непрерывного потока
         if (y * fontSize > canvas.height || Math.random() > 0.95) {
-            drops[i] = Math.random() * (canvas.height / fontSize); // Случайная позиция по всей высоте
+            drops[i] = Math.random() * (canvas.height / fontSize);
         }
-        drops[i]++; // Скорость падения
+        drops[i]++;
     });
 }
 
