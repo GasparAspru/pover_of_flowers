@@ -101,7 +101,7 @@ const flowers = [
     { name: "Peach Perfect", id: "sakura_96", icon: "flowers/sakura-96.png", description: "Растение из разрушенного мира, выжило в пепле.", link: "https://wildsakura.example.com/flower-96" },
     { name: "Zephyra", id: "sakura_97", icon: "flowers/sakura-97.png", description: "Неоновая сакура, цветет под звуки дождя.", link: "https://wildsakura.example.com/flower-97" },
     { name: "Seraphina", id: "sakura_98", icon: "flowers/sakura-98.png", description: "Цветок с памятью о старом мире, хранит образы.", link: "https://wildsakura.example.com/flower-98" },
-    { name: "False Bird", id: "sakura_99", icon: "flowers/sakura-99.png", description: "Последняя сакура из коллекции, символ будущего.", link: "https://wildsakura.example.com/flower-99" }
+    { name: "False Bird", id: "sakura_99", icon: "flowers/sakura-99.png", description: "Последняя сакура из коллекции, символ будущего.", link: "https://wildsakura.example.com/flower-99" },
     { name: "Sylvaris", id: "sakura_100", icon: "flowers/sakura-100.png", description: "Последняя сакура из коллекции, символ будущего.", link: "https://wildsakura.example.com/flower-100" }
 ];
 
