@@ -3,11 +3,11 @@ window.Telegram.WebApp.ready();
 
 // Список из 99 цветков с уникальными описаниями
 const flowers = [
-    { name: "Flowey (0,1%)", id: "sakura_1", icon: "flowers/sakura-1.png", description: "Неоновая искра из трущоб Токио 2087, питается энергией забытых сетей.", link: "https://wildsakura.example.com/flower-1" },
-    { name: "Zap Aster (0,2%)", id: "sakura_2", icon: "flowers/sakura-2.png", description: "Гибридный цветок, выращенный в лабораториях Neo-Osaka, излучает слабый радиосигнал.", link: "https://wildsakura.example.com/flower-2" },
-    { name: "Сакура 3", id: "sakura_3", icon: "flowers/sakura-3.png", description: "Дикий бутон, найденный в руинах старого дата-центра, пахнет озоном.", link: "https://wildsakura.example.com/flower-3" },
-    { name: "Сакура 4", id: "sakura_4", icon: "flowers/sakura-4.png", description: "Квантовый эксперимент: лепестки мерцают в двух состояниях одновременно.", link: "https://wildsakura.example.com/flower-4" },
-    { name: "Сакура 5", id: "sakura_5", icon: "flowers/sakura-5.png", description: "Редкий штамм из зоны отчуждения Kyoto-Grid, устойчив к кислотным дождям.", link: "https://wildsakura.example.com/flower-5" },
+    { name: "Flowey - (0,1%)", id: "sakura_1", icon: "flowers/sakura-1.png", description: "Неоновая искра из трущоб Токио 2087, питается энергией забытых сетей.", link: "https://wildsakura.example.com/flower-1" },
+    { name: "Zap Aster - (0,2%)", id: "sakura_2", icon: "flowers/sakura-2.png", description: "Гибридный цветок, выращенный в лабораториях Neo-Osaka, излучает слабый радиосигнал.", link: "https://wildsakura.example.com/flower-2" },
+    { name: "Sunflower - (0,2%)", id: "sakura_3", icon: "flowers/sakura-3.png", description: "Дикий бутон, найденный в руинах старого дата-центра, пахнет озоном.", link: "https://wildsakura.example.com/flower-3" },
+    { name: "Carnation - (0,2%)", id: "sakura_4", icon: "flowers/sakura-4.png", description: "Квантовый эксперимент: лепестки мерцают в двух состояниях одновременно.", link: "https://wildsakura.example.com/flower-4" },
+    { name: "Dog Flower - (0,2%)", id: "sakura_5", icon: "flowers/sakura-5.png", description: "Редкий штамм из зоны отчуждения Kyoto-Grid, устойчив к кислотным дождям.", link: "https://wildsakura.example.com/flower-5" },
     { name: "Сакура 6", id: "sakura_6", icon: "flowers/sakura-6.png", description: "Цифровой цветок, взломанный хакерами из Shibuya, шепчет код на ветру.", link: "https://wildsakura.example.com/flower-6" },
     { name: "Сакура 7", id: "sakura_7", icon: "flowers/sakura-7.png", description: "Синтетическая сакура, созданная для украшения орбитальных станций.", link: "https://wildsakura.example.com/flower-7" },
     { name: "Сакура 8", id: "sakura_8", icon: "flowers/sakura-8.png", description: "Продукт генной мутации, светится в темноте благодаря нано-ботам.", link: "https://wildsakura.example.com/flower-8" },
