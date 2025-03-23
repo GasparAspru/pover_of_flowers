@@ -19,25 +19,24 @@
             overflow-x: hidden;
         }
 
-        .logo {
-            display: block;
-            margin: 20px auto;
-            max-width: 150px;
-            height: auto;
-        }
-
         h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 2.5em;
             color: #ff007a;
             text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a;
             margin: 20px 0;
-            animation: neon-flicker 1.5s infinite alternate;
+            animation: neon-flicker 1.5s infinite alternate, powerOn 1s ease forwards;
         }
 
         @keyframes neon-flicker {
             0%, 100% { text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a; }
             50% { text-shadow: 0 0 5px #ff007a, 0 0 10px #ff007a; }
+        }
+
+        @keyframes powerOn {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 0.5; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .flower-image {
@@ -54,6 +53,16 @@
             border-radius: 50%;
             animation: neon-glow 1.5s infinite alternate;
             cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .flower-image:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 20px 15px #ff007a, 
+                0 0 35px 20px #00d4ff, 
+                inset 0 0 20px 15px #ff007a, 
+                inset 0 0 35px 20px #00d4ff;
         }
 
         @keyframes neon-glow {
@@ -89,12 +98,24 @@
             overflow: hidden;
             transform: translateY(20px);
             transition: opacity 0.5s ease, transform 0.5s ease, height 0.5s ease;
+            position: relative;
         }
 
         .description.visible {
             opacity: 1;
             height: auto;
             transform: translateY(0);
+            animation: scanEffect 0.5s ease forwards, textFlicker 2s infinite alternate;
+        }
+
+        @keyframes scanEffect {
+            0% { clip-path: inset(100% 0 0 0); }
+            100% { clip-path: inset(0 0 0 0); }
+        }
+
+        @keyframes textFlicker {
+            0%, 100% { text-shadow: 0 0 5px #00d4ff; }
+            50% { text-shadow: 0 0 8px #00d4ff, 0 0 12px #ff007a; }
         }
 
         .buttons {
@@ -113,7 +134,27 @@
             cursor: pointer;
             text-transform: uppercase;
             box-shadow: 0 0 10px #ff007a;
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s ease;
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.4s ease, height 0.4s ease;
+        }
+
+        .button:hover::after {
+            width: 200%;
+            height: 200%;
         }
 
         .button:hover {
@@ -155,12 +196,8 @@
         let isVisible = false;
 
         toggleImage.addEventListener('click', () => {
-            if (isVisible) {
-                description.classList.remove('visible');
-            } else {
-                description.classList.add('visible');
-            }
             isVisible = !isVisible;
+            description.classList.toggle('visible');
         });
 
         // Matrix effect
@@ -187,12 +224,11 @@
         function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = "#ff007a";
-            ctx.font = `${fontSize}px monospace`;
             
             drops.forEach((y, i) => {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                 const x = i * fontSize;
+                ctx.fillStyle = Math.random() > 0.5 ? "#ff007a" : "#00d4ff";
                 ctx.fillText(text, x, y * fontSize);
                 if (y * fontSize > canvas.height && Math.random() > 0.95) {
                     drops[i] = 0;
