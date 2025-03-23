@@ -54,6 +54,7 @@
             animation: neon-glow 1.5s infinite alternate;
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
         }
 
         .flower-image:hover {
@@ -63,6 +64,15 @@
                 0 0 35px 20px #00d4ff, 
                 inset 0 0 20px 15px #ff007a, 
                 inset 0 0 35px 20px #00d4ff;
+        }
+
+        .flower-image:active {
+            transform: scale(0.98);
+            box-shadow: 
+                0 0 25px 20px #ff007a, 
+                0 0 40px 25px #00d4ff, 
+                inset 0 0 25px 20px #ff007a, 
+                inset 0 0 40px 25px #00d4ff;
         }
 
         @keyframes neon-glow {
@@ -137,6 +147,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
+            outline: none;
         }
 
         .button::after {
@@ -165,6 +176,7 @@
 
         .button:active {
             transform: scale(0.95);
+            box-shadow: 0 0 25px #00d4ff, 0 0 15px #ff007a;
         }
 
         canvas {
