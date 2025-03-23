@@ -54,7 +54,7 @@
             animation: neon-glow 1.5s infinite alternate;
             cursor: pointer;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            outline: none;
+            outline: none; /* Убираем контур */
         }
 
         .flower-image:hover {
@@ -69,10 +69,19 @@
         .flower-image:active {
             transform: scale(0.98);
             box-shadow: 
-                0 0 25px 20px #ff007a, 
-                0 0 40px 25px #00d4ff, 
-                inset 0 0 25px 20px #ff007a, 
-                inset 0 0 40px 25px #00d4ff;
+                0 0 30px 20px #ff007a, 
+                0 0 45px 25px #00d4ff, 
+                inset 0 0 30px 20px #ff007a, 
+                inset 0 0 45px 25px #00d4ff;
+        }
+
+        .flower-image:focus {
+            outline: none; /* Убираем контур при фокусе */
+            box-shadow: 
+                0 0 25px 15px #ff007a, 
+                0 0 40px 20px #00d4ff, 
+                inset 0 0 25px 15px #ff007a, 
+                inset 0 0 40px 20px #00d4ff;
         }
 
         @keyframes neon-glow {
@@ -147,7 +156,23 @@
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
-            outline: none;
+            outline: none; /* Убираем контур */
+        }
+
+        .button:hover {
+            background: linear-gradient(90deg, #00d4ff, #ff007a);
+            box-shadow: 0 0 20px #00d4ff;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            transform: scale(0.95);
+            box-shadow: 0 0 30px #00d4ff, 0 0 20px #ff007a;
+        }
+
+        .button:focus {
+            outline: none; /* Убираем контур при фокусе */
+            box-shadow: 0 0 25px #00d4ff, 0 0 15px #ff007a;
         }
 
         .button::after {
@@ -168,17 +193,6 @@
             height: 200%;
         }
 
-        .button:hover {
-            background: linear-gradient(90deg, #00d4ff, #ff007a);
-            box-shadow: 0 0 20px #00d4ff;
-            transform: scale(1.05);
-        }
-
-        .button:active {
-            transform: scale(0.95);
-            box-shadow: 0 0 25px #00d4ff, 0 0 15px #ff007a;
-        }
-
         canvas {
             position: fixed;
             top: 0;
@@ -193,7 +207,7 @@
 <body>
     <canvas id="matrix"></canvas>
     <h1>Flowey</h1>
-    <img src="../img/logo2.png" alt="Flowey" class="flower-image" id="toggleImage">
+    <img src="../img/logo2.png" alt="Flowey" class="flower-image" id="toggleImage" tabindex="0">
     <div class="description" id="description">
         Неоновая искра из трущоб Токио 2087, питается энергией забытых сетей.
     </div>
@@ -210,6 +224,15 @@
         toggleImage.addEventListener('click', () => {
             isVisible = !isVisible;
             description.classList.toggle('visible');
+        });
+
+        // Добавляем возможность управления клавиатурой
+        toggleImage.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                isVisible = !isVisible;
+                description.classList.toggle('visible');
+            }
         });
 
         // Matrix effect
