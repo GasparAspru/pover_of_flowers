@@ -19,11 +19,55 @@
             overflow-x: hidden;
         }
 
-        .logo {
-            display: block;
-            margin: 20px auto;
-            max-width: 150px; /* Меньший размер для страниц с цветками */
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .flower-image {
+            max-width: 70%;
             height: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 0, 122, 0.3) 0%, rgba(0, 212, 255, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
+            filter: blur(15px);
+            z-index: 0;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, rgba(255, 0, 122, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
+            filter: blur(10px);
+            z-index: 0;
+            animation: glow-reverse 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        }
+
+        @keyframes glow-reverse {
+            0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
         }
 
         h1 {
@@ -38,14 +82,6 @@
         @keyframes neon-flicker {
             0%, 100% { text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a; }
             50% { text-shadow: 0 0 5px #ff007a, 0 0 10px #ff007a; }
-        }
-
-        .flower-image {
-            max-width: 70%;
-            height: auto;
-            margin: 20px 0;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
-            padding: 10px;
         }
 
         .description {
@@ -111,7 +147,9 @@
 <body>
 <canvas id="matrix" width="880" height="646"></canvas>
     <h1>Flowey</h1>
-    <img src="../img/logo1.png" alt="Flowey" class="flower-image">
+    <div class="logo-container">
+        <img src="../img/logo1.png" alt="Flowey" class="flower-image">
+    </div>
     <div class="description">
         Неоновая искра из трущоб Токио 2087, питается энергией забытых сетей.
     </div>
