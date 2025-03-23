@@ -6,38 +6,29 @@
     <title>Zap Aster</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Exo+2:wght@400&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Exo 2', sans-serif;
-            background: linear-gradient(135deg, #0a0015, #000);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        /* Предыдущие стили остаются без изменений */
 
-        .logo {
-            display: block;
-            margin: 20px auto;
-            max-width: 150px;
-            height: auto;
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5em;
-            color: #ff007a;
-            text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a;
+        .description {
+            font-size: 1.2em;
+            max-width: 600px;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 0, 0, 0.8));
+            border: 1px solid #00d4ff;
+            box-shadow: 0 0 15px #00d4ff, inset 0 0 5px #00d4ff;
+            color: #e0e0e0;
+            text-shadow: 0 0 5px #00d4ff;
             margin: 20px 0;
-            animation: neon-flicker 1.5s infinite alternate;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            display: none; /* Изначально скрыто */
         }
 
-        @keyframes neon-flicker {
-            0%, 100% { text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a; }
-            50% { text-shadow: 0 0 5px #ff007a, 0 0 10px #ff007a; }
+        .description.visible {
+            opacity: 1;
+            transform: translateY(0);
+            display: block;
         }
 
         .flower-image {
@@ -53,90 +44,17 @@
                 inset 0 0 25px 15px #00d4ff;
             border-radius: 50%;
             animation: neon-glow 1.5s infinite alternate;
+            cursor: pointer; /* Добавляем указатель при наведении */
         }
 
-        @keyframes neon-glow {
-            0% { 
-                box-shadow: 
-                    0 0 15px 10px #ff007a, 
-                    0 0 25px 15px #00d4ff, 
-                    inset 0 0 15px 10px #ff007a, 
-                    inset 0 0 25px 15px #00d4ff;
-            }
-            100% { 
-                box-shadow: 
-                    0 0 10px 5px #ff007a, 
-                    0 0 15px 10px #00d4ff, 
-                    inset 0 0 10px 5px #ff007a, 
-                    inset 0 0 15px 10px #00d4ff;
-            }
-        }
-
-        .description {
-            font-size: 1.2em;
-            max-width: 600px;
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 0, 0, 0.8));
-            border: 1px solid #00d4ff;
-            box-shadow: 0 0 15px #00d4ff, inset 0 0 5px #00d4ff;
-            color: #e0e0e0;
-            text-shadow: 0 0 5px #00d4ff;
-            margin: 20px 0;
-            opacity: 0;
-            animation: fadeIn 1s ease-in forwards;
-        }
-
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .buttons {
-            margin: 30px 0;
-            display: flex;
-            gap: 20px;
-        }
-
-        .button {
-            padding: 12px 24px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2em;
-            color: #fff;
-            background: linear-gradient(90deg, #ff007a, #00d4ff);
-            border: none;
-            cursor: pointer;
-            text-transform: uppercase;
-            box-shadow: 0 0 10px #ff007a;
-            transition: all 0.3s ease;
-        }
-
-        .button:hover {
-            background: linear-gradient(90deg, #00d4ff, #ff007a);
-            box-shadow: 0 0 20px #00d4ff;
-            transform: scale(1.05);
-        }
-
-        .button:active {
-            transform: scale(0.95);
-        }
-
-        canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            width: 100%;
-            height: 100%;
-            opacity: 0.7;
-        }
+        /* Остальные стили остаются без изменений */
     </style>
 </head>
 <body>
     <canvas id="matrix"></canvas>
     <h1>Flowey</h1>
-    <img src="../img/logo2.png" alt="Flowey" class="flower-image">
-    <div class="description">
+    <img src="../img/logo2.png" alt="Flowey" class="flower-image" id="toggleImage">
+    <div class="description" id="description">
         Неоновая искра из трущоб Токио 2087, питается энергией забытых сетей.
     </div>
     <div class="buttons">
@@ -145,6 +63,27 @@
     </div>
 
     <script>
+        // Предыдущий код Matrix остается без изменений
+
+        const toggleImage = document.getElementById('toggleImage');
+        const description = document.getElementById('description');
+        let isVisible = false;
+
+        toggleImage.addEventListener('click', () => {
+            if (isVisible) {
+                description.classList.remove('visible');
+                setTimeout(() => {
+                    description.style.display = 'none';
+                }, 500); // Совпадает с длительностью transition
+            } else {
+                description.style.display = 'block';
+                setTimeout(() => {
+                    description.classList.add('visible');
+                }, 10); // Небольшая задержка для корректной анимации
+            }
+            isVisible = !isVisible;
+        });
+
         const canvas = document.getElementById("matrix");
         const ctx = canvas.getContext("2d");
         canvas.width = window.innerWidth;
