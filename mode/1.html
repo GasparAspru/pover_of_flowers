@@ -19,96 +19,20 @@
             overflow-x: hidden;
         }
 
-        .logo-container {
-            position: relative;
-            display: inline-block;
-            margin: 20px 0;
-        }
-
-        .flower-image {
-            max-width: 70%;
+        .logo {
+            display: block;
+            margin: 20px auto;
+            max-width: 150px;
             height: auto;
-            position: relative;
-            z-index: 1;
         }
 
-        /* Свечение вокруг логотипа */
-        .logo-container::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle, rgba(255, 0, 122, 0.3) 0%, rgba(0, 212, 255, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
-            filter: blur(15px);
-            z-index: 0;
-            animation: flicker 1.5s infinite alternate;
-        }
-
-        .logo-container::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, rgba(255, 0, 122, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
-            filter: blur(10px);
-            z-index: 0;
-            animation: flicker-reverse 1.5s infinite alternate;
-        }
-
-        /* Мерцание для логотипа */
-        @keyframes flicker {
-            0%, 100% { opacity: 0.6; }
-            50% { opacity: 1; }
-        }
-
-        @keyframes flicker-reverse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-
-        /* Заголовок с пульсирующим свечением */
         h1 {
             font-family: 'Orbitron', sans-serif;
             font-size: 2.5em;
             color: #ff007a;
             text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a;
             margin: 20px 0;
-            position: relative;
             animation: neon-flicker 1.5s infinite alternate;
-        }
-
-        h1::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 120%;
-            height: 120%;
-            background: radial-gradient(circle, rgba(255, 0, 122, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
-            filter: blur(15px);
-            z-index: -1;
-            animation: glow 2s ease-in-out infinite;
-        }
-
-        h1::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
-            filter: blur(10px);
-            z-index: -1;
-            animation: glow-reverse 2s ease-in-out infinite;
         }
 
         @keyframes neon-flicker {
@@ -116,14 +40,36 @@
             50% { text-shadow: 0 0 5px #ff007a, 0 0 10px #ff007a; }
         }
 
-        @keyframes glow {
-            0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+        .flower-image {
+            max-width: 70%;
+            height: auto;
+            margin: 20px 0;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            padding: 10px;
+            box-shadow: 
+                0 0 15px 10px #ff007a, 
+                0 0 25px 15px #00d4ff, 
+                inset 0 0 15px 10px #ff007a, 
+                inset 0 0 25px 15px #00d4ff;
+            border-radius: 50%;
+            animation: neon-glow 1.5s infinite alternate;
         }
 
-        @keyframes glow-reverse {
-            0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
-            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+        @keyframes neon-glow {
+            0% { 
+                box-shadow: 
+                    0 0 15px 10px #ff007a, 
+                    0 0 25px 15px #00d4ff, 
+                    inset 0 0 15px 10px #ff007a, 
+                    inset 0 0 25px 15px #00d4ff;
+            }
+            100% { 
+                box-shadow: 
+                    0 0 10px 5px #ff007a, 
+                    0 0 15px 10px #00d4ff, 
+                    inset 0 0 10px 5px #ff007a, 
+                    inset 0 0 15px 10px #00d4ff;
+            }
         }
 
         .description {
@@ -187,11 +133,9 @@
     </style>
 </head>
 <body>
-<canvas id="matrix" width="880" height="646"></canvas>
+    <canvas id="matrix"></canvas>
     <h1>Flowey</h1>
-    <div class="logo-container">
-        <img src="../img/logo1.png" alt="Flowey" class="flower-image">
-    </div>
+    <img src="../img/logo1.png" alt="Flowey" class="flower-image">
     <div class="description">
         Неоновая искра из трущоб Токио 2087, питается энергией забытых сетей.
     </div>
@@ -215,8 +159,7 @@
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(0);
 
-        // Статичная матрица
-        function drawStaticMatrix() {
+        function drawMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#ff007a";
@@ -224,13 +167,15 @@
             drops.forEach((y, i) => {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                 const x = i * fontSize;
-                const yPos = Math.floor(Math.random() * (canvas.height / fontSize)) * fontSize;
-                ctx.fillText(text, x, yPos);
+                ctx.fillText(text, x, y * fontSize);
+                if (y * fontSize > canvas.height || Math.random() > 0.95) {
+                    drops[i] = Math.random() * (canvas.height / fontSize);
+                }
+                drops[i]++;
             });
         }
 
-        // Рисуем матрицу один раз
-        drawStaticMatrix();
+        setInterval(drawMatrix, 50);
     </script>
 </body>
 </html>
