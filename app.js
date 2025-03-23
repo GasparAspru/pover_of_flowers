@@ -127,7 +127,7 @@ function displayFlowers() {
         flowerDetails.className = "flower-details";
         flowerDetails.innerHTML = `
             <p>${flower.description}</p>
-            <a href="${flower.link}" target="_blank" onclick="Telegram.WebApp.openLink('${flower.link}'); return false;">Узнать больше</a>
+            <a href="${flower.link}">Узнать больше</a> <!-- Убрано target="_blank" и Telegram.WebApp.openLink -->
         `;
 
         // Обработчик клика для раскрытия
