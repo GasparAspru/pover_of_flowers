@@ -32,6 +32,7 @@
             z-index: 1;
         }
 
+        /* Свечение вокруг логотипа */
         .logo-container::before {
             content: '';
             position: absolute;
@@ -43,7 +44,7 @@
             background: radial-gradient(circle, rgba(255, 0, 122, 0.3) 0%, rgba(0, 212, 255, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
             filter: blur(15px);
             z-index: 0;
-            animation: glow 2s ease-in-out infinite;
+            animation: flicker 1.5s infinite alternate;
         }
 
         .logo-container::after {
@@ -57,7 +58,62 @@
             background: radial-gradient(circle, rgba(0, 212, 255, 0.2) 0%, rgba(255, 0, 122, 0.1) 50%, rgba(0, 0, 0, 0) 70%);
             filter: blur(10px);
             z-index: 0;
+            animation: flicker-reverse 1.5s infinite alternate;
+        }
+
+        /* Мерцание для логотипа */
+        @keyframes flicker {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes flicker-reverse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        /* Заголовок с пульсирующим свечением */
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: #ff007a;
+            text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a;
+            margin: 20px 0;
+            position: relative;
+            animation: neon-flicker 1.5s infinite alternate;
+        }
+
+        h1::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 0, 122, 0.2) 0%, rgba(0, 0, 0, 0) 70%);
+            filter: blur(15px);
+            z-index: -1;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            filter: blur(10px);
+            z-index: -1;
             animation: glow-reverse 2s ease-in-out infinite;
+        }
+
+        @keyframes neon-flicker {
+            0%, 100% { text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a; }
+            50% { text-shadow: 0 0 5px #ff007a, 0 0 10px #ff007a; }
         }
 
         @keyframes glow {
@@ -68,20 +124,6 @@
         @keyframes glow-reverse {
             0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
             50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
-        }
-
-        h1 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 2.5em;
-            color: #ff007a;
-            text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a;
-            margin: 20px 0;
-            animation: neon-flicker 1.5s infinite alternate;
-        }
-
-        @keyframes neon-flicker {
-            0%, 100% { text-shadow: 0 0 10px #ff007a, 0 0 20px #ff007a; }
-            50% { text-shadow: 0 0 5px #ff007a, 0 0 10px #ff007a; }
         }
 
         .description {
@@ -173,7 +215,8 @@
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(0);
 
-        function drawMatrix() {
+        // Статичная матрица
+        function drawStaticMatrix() {
             ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "#ff007a";
@@ -181,15 +224,13 @@
             drops.forEach((y, i) => {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
                 const x = i * fontSize;
-                ctx.fillText(text, x, y * fontSize);
-                if (y * fontSize > canvas.height || Math.random() > 0.95) {
-                    drops[i] = Math.random() * (canvas.height / fontSize);
-                }
-                drops[i]++;
+                const yPos = Math.floor(Math.random() * (canvas.height / fontSize)) * fontSize;
+                ctx.fillText(text, x, yPos);
             });
         }
 
-        setInterval(drawMatrix, 50);
+        // Рисуем матрицу один раз
+        drawStaticMatrix();
     </script>
 </body>
 </html>
