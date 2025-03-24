@@ -4,8 +4,8 @@ window.Telegram.WebApp.ready();
 // Список из 100 цветков с уникальными описаниями и ссылками на файлы в папке mode
 const flowers = [
     { name: "Flowey", id: "sakura_1", icon: "flowers/sakura-1.png", description: "Запас-(0,1%) от общего количества Sakura Flower. Поначалу Ffowey кажется дружелюбным и услужливым говорящим цветком, но вскоре оказывается, что он — садист с манией величия и более зловещими целями. ", link: "mode/1.html" },
-    { name: "Zap Aster", id: "sakura_2", icon: "flowers/sakura-2.png", description: "Гибридный цветок, выращенный в лабораториях Neo-Osaka, излучает слабый радиосигнал.", link: "mode/2.html" },
-    { name: "Sunflower", id: "sakura_3", icon: "flowers/sakura-3.png", description: "Дикий бутон, найденный в руинах старого дата-центра, пахнет озоном.", link: "mode/3.html" },
+    { name: "Zap Aster", id: "sakura_2", icon: "flowers/sakura-2.png", description: "Запас-(0,2%) от общего количества Sakura Flower. Гибридный цветок Zap Aster, выращенный в лабораториях Neo-Osaka, излучает слабый электромагнитный импульс.", link: "mode/2.html" },
+    { name: "Sunflower", id: "sakura_3", icon: "flowers/sakura-3.png", description: "Запас-(0,2%) от общего количества Sakura Flower. Sunflower питается энергией солнца, наделен способностью гелиотропизма и имеет ультрафиолетовые кольца для привлечения пчел и климатической адаптации. ", link: "mode/3.html" },
     { name: "Carnation", id: "sakura_4", icon: "flowers/sakura-4.png", description: "Квантовый эксперимент: лепестки мерцают в двух состояниях одновременно.", link: "mode/4.html" },
     { name: "Dog Flower", id: "sakura_5", icon: "flowers/sakura-5.png", description: "Редкий штамм из зоны отчуждения Kyoto-Grid, устойчив к кислотным дождям.", link: "mode/5.html" },
     { name: "Wilted", id: "sakura_6", icon: "flowers/sakura-6.png", description: "Цифровой цветок, взломанный хакерами из Shibuya, шепчет код на ветру.", link: "mode/6.html" },
