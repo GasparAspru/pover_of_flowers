@@ -105,7 +105,7 @@ const flowers = [
     { name: "Sylvaris", id: "sakura_100", icon: "flowers/sakura-100.png", description: "Вершина эволюции: сакура, рожденная из кода и стали.", link: "mode/100.html" }
 ];
 
-// Отображение списка цветков
+// Отображение списка цветков во всплывающем окне кнопки 2
 function displayFlowers() {
     const flowerList = document.getElementById("flowerList");
     flowerList.innerHTML = "";
@@ -114,37 +114,29 @@ function displayFlowers() {
         const flowerDiv = document.createElement("div");
         flowerDiv.className = "flower-item";
 
-        // Заголовок с иконкой
         const flowerHeader = document.createElement("div");
         flowerHeader.className = "flower-header";
         flowerHeader.innerHTML = `
             <img src="${flower.icon}" class="flower-icon" alt="${flower.name}">
-            <span>${flower.name}</span>
+            <span class="flower-name">${flower.name}</span>
         `;
 
-        // Детали (описание + ссылка)
         const flowerDetails = document.createElement("div");
         flowerDetails.className = "flower-details";
         flowerDetails.innerHTML = `
             <p>${flower.description}</p>
-            <a href="${flower.link}">Узнать больше</a> <!-- Убрано target="_blank" и Telegram.WebApp.openLink -->
+            <a href="${flower.link}">Узнать больше</a>
         `;
 
-        // Обработчик клика для раскрытия
-        flowerHeader.onclick = () => {
+        flowerHeader.addEventListener("click", (e) => {
+            e.stopPropagation();
             flowerDetails.classList.toggle("show");
-        };
+        });
 
         flowerDiv.appendChild(flowerHeader);
         flowerDiv.appendChild(flowerDetails);
         flowerList.appendChild(flowerDiv);
     });
-}
-
-// Переключение видимости выпадающего меню
-function toggleDropdown() {
-    const dropdownContent = document.getElementById("flowerList");
-    dropdownContent.classList.toggle("show");
 }
 
 // Эффект матрицы по всей вертикали
@@ -182,9 +174,6 @@ function drawMatrix() {
 }
 
 setInterval(drawMatrix, 50);
-
-// Инициализация списка цветков
-displayFlowers();
 
 // Настройка кнопки "Назад"
 Telegram.WebApp.BackButton.onClick(() => {
