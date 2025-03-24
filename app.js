@@ -105,7 +105,7 @@ const flowers = [
     { name: "Sylvaris", id: "sakura_100", icon: "flowers/sakura-100.png", description: "Вершина эволюции: сакура, рожденная из кода и стали.", link: "mode/100.html" }
 ];
 
-// Отображение списка цветков во всплывающем окне кнопки 2
+// Отображение списка цветков
 function displayFlowers() {
     const flowerList = document.getElementById("flowerList");
     flowerList.innerHTML = "";
@@ -125,11 +125,12 @@ function displayFlowers() {
         flowerDetails.className = "flower-details";
         flowerDetails.innerHTML = `
             <p>${flower.description}</p>
-            <a href="${flower.link}">Узнать больше</a>
+            <a href="${flower.link}" onclick="Telegram.WebApp.openLink('${flower.link}'); return false;">Узнать больше</a>
         `;
 
         flowerHeader.addEventListener("click", (e) => {
             e.stopPropagation();
+            Telegram.WebApp.HapticFeedback.impactOccurred('medium'); // Тактильный отклик при раскрытии
             flowerDetails.classList.toggle("show");
         });
 
@@ -139,7 +140,7 @@ function displayFlowers() {
     });
 }
 
-// Эффект матрицы по всей вертикали
+// Эффект матрицы
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
@@ -150,9 +151,9 @@ const latin = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const nums = "0123456789";
 const alphabet = katakana + latin + nums;
 
-const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(0);
+const fontSize = Math.max(12, Math.min(16, window.innerWidth / 80)); // Адаптивный размер шрифта
+const columns = Math.floor(canvas.width / fontSize);
+const drops = Array(columns).fill(0);
 
 function drawMatrix() {
     ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
@@ -173,6 +174,19 @@ function drawMatrix() {
     });
 }
 
+// Обновление матрицы при изменении размеров
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const newColumns = Math.floor(canvas.width / fontSize);
+    if (newColumns !== columns) {
+        drops.length = newColumns;
+        for (let i = 0; i < newColumns; i++) {
+            drops[i] = drops[i] || 0;
+        }
+    }
+});
+
 setInterval(drawMatrix, 50);
 
 // Настройка кнопки "Назад"
@@ -180,3 +194,10 @@ Telegram.WebApp.BackButton.onClick(() => {
     Telegram.WebApp.close();
 });
 Telegram.WebApp.BackButton.show();
+
+// Обработка параметров запуска Telegram
+const initData = Telegram.WebApp.initDataUnsafe;
+if (initData && initData.start_param) {
+    console.log("Start param:", initData.start_param);
+    // Можно добавить логику обработки параметров запуска
+}
