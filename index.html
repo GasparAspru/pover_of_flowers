@@ -179,9 +179,6 @@
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-
-<img src="get_image.php?image=pixel.png" alt="Сакура 1">
-
 </head>
 <body>
     <canvas id="matrix"></canvas>
@@ -260,5 +257,11 @@
             canvas.height = window.innerHeight;
         });
     </script>
+
+<img id="sakura-image" alt="Сакура 1">
+<script>
+    document.getElementById('sakura-image').src = atob('aW1nL3BpeGVsLnBuZw=='); // Base64-кодированный путь
+</script>
+
 </body>
 </html>
