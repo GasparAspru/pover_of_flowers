@@ -28,7 +28,6 @@ document.getElementById('passwordInput').addEventListener('keypress', (e) => {
     }
 });
 
-
 // Инициализация Telegram Web App
 window.Telegram.WebApp.ready();
 
