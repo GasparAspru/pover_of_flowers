@@ -1,3 +1,34 @@
+// Простой пример проверки пароля (замените 'secret' на ваш пароль)
+const correctPassword = '12345678';
+
+function checkPassword() {
+    const input = document.getElementById('passwordInput').value;
+    const errorMessage = document.getElementById('errorMessage');
+    const modal = document.getElementById('passwordModal');
+
+    if (input === correctPassword) {
+        modal.style.display = 'none';
+        Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    } else {
+        errorMessage.textContent = 'Неверный пароль';
+        errorMessage.style.display = 'block';
+        Telegram.WebApp.HapticFeedback.notificationOccurred('error');
+    }
+}
+
+// Показать модальное окно при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('passwordModal').style.display = 'flex';
+});
+
+// Поддержка Enter для отправки
+document.getElementById('passwordInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        checkPassword();
+    }
+});
+
+
 // Инициализация Telegram Web App
 window.Telegram.WebApp.ready();
 
