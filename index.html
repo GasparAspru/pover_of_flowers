@@ -182,7 +182,14 @@
 </head>
 <body>
     <canvas id="matrix"></canvas>
-    <h1>   </h1>
+    <h1>  <div id="passwordModal" class="password-modal">
+    <div class="password-container">
+        <h2>Введите пароль</h2>
+        <input type="password" id="passwordInput" placeholder="Пароль" class="password-input">
+        <button onclick="checkPassword()" class="password-button">Войти</button>
+        <p id="errorMessage" class="error-message"></p>
+    </div>
+</div> </h1>
 
     <div class="bottom-menu">
         <div class="menu-button" onclick="showPopup(1)">Sakura</div>
