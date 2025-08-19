@@ -10,7 +10,7 @@ function checkPassword() {
         modal.style.display = 'none';
         Telegram.WebApp.HapticFeedback.notificationOccurred('success');
     } else {
-        errorMessage.textContent = 'Неверный пароль';
+        errorMessage.textContent = 'Wrong';
         errorMessage.style.display = 'block';
         Telegram.WebApp.HapticFeedback.notificationOccurred('error');
     }
