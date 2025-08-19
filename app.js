@@ -1,5 +1,5 @@
 // Простой пример проверки пароля (замените 'secret' на ваш пароль)
-const correctPassword = '21112025';
+const correctPassword = 'AUDUR2025';
 
 function checkPassword() {
     const input = document.getElementById('passwordInput').value;
